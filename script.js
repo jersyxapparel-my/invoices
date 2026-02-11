@@ -19,7 +19,7 @@ const STAMP_DATA_URL = 'https://i.postimg.cc/JhLhF5xc/SIGN-RARA-JA-01.png';
 
 const INPUT_FIELDS = {
 	fInvoiceNo: 'invoiceInput',
-	fDate: 'invoiceDate', // Tambah ini
+	fDate: 'date', // Tambah ini
 	fCustomer: 'customer',
 	fAddress: 'address',
 	fPhone: 'phone',
@@ -658,9 +658,10 @@ async function autoGenerateInvoiceNo() {
 	const dateField = document.getElementById('fDate');
 	const today = new Date();
 
-	// Set tarikh hari ini dalam format YYYY-MM-DD untuk input type="date"
-    const formattedDate = today.toISOString().split('T')[0];
-    if (dateField) dateField.value = formattedDate;
+	// SET TARIKH HARI INI HANYA JIKA MEDAN KOSONG (Invois Baru)
+	if (dateField && !dateField.value) {
+		dateField.value = today.toISOString().split('T')[0];
+	}
 
 	// Ambil tahun semasa (Contoh: 2026)
 	const currentYear = today.getFullYear().toString();
