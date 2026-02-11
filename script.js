@@ -19,6 +19,7 @@ const STAMP_DATA_URL = 'https://i.postimg.cc/JhLhF5xc/SIGN-RARA-JA-01.png';
 
 const INPUT_FIELDS = {
 	fInvoiceNo: 'invoiceInput',
+	fDate: 'invoiceDate', // Tambah ini
 	fCustomer: 'customer',
 	fAddress: 'address',
 	fPhone: 'phone',
@@ -346,6 +347,10 @@ async function loadInvoiceFromCloud(token) {
 		if (data && data !== "Not Found") {
 			// Isi maklumat asas
 			document.getElementById('fInvoiceNo').value = data.invNo.replace('INV-', '');
+			// MASUKKAN TARIKH DARI CLOUD KE INPUT
+            if (data.date) {
+                document.getElementById('fDate').value = data.date; 
+            }
 			document.getElementById('fCustomer').value = data.customer;
 			document.getElementById('fAddress').value = data.address;
 			document.getElementById('fPhone').value = data.phone;
@@ -450,6 +455,7 @@ function generatePreview() {
 	// Destructuring data supaya pembolehubah di bawah (invNo, customer, dll) berfungsi
 	const {
 		invNo,
+		date,
 		customer,
 		address,
 		phone,
@@ -495,10 +501,11 @@ function generatePreview() {
             </div>
           </div>
           <div class="meta">
-            <div style="font-size:20px; font-weight:700;">INVOICE</div>
-            <div>No. Inv: ${invNo}</div>
-            <div>By: ${issuedBy}</div>
-            <div class="muted">${new Date().toLocaleDateString('en-GB')}</div>
+    		<div style="font-size:20px; font-weight:700;">INVOICE</div>
+    		<div>No. Inv: ${invNo}</div>
+    		<div>By: ${issuedBy}</div>
+    		<div class="muted">${date ? new Date(date).toLocaleDateString('en-GB') : '-'}</div>
+			</div>
           </div>
         </div>
 
@@ -648,7 +655,12 @@ function shareWhatsapp() {
 
 async function autoGenerateInvoiceNo() {
 	const field = document.getElementById('fInvoiceNo');
+	const dateField = document.getElementById('fDate');
 	const today = new Date();
+
+	// Set tarikh hari ini dalam format YYYY-MM-DD untuk input type="date"
+    const formattedDate = today.toISOString().split('T')[0];
+    if (dateField) dateField.value = formattedDate;
 
 	// Ambil tahun semasa (Contoh: 2026)
 	const currentYear = today.getFullYear().toString();
